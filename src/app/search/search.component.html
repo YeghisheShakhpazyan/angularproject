@@ -1,0 +1,33 @@
+<div class="search-container">
+  <div class="search-container-header">
+    <h3>Search</h3>
+    <i style='font-size:24px' class='fas'>&#xf03b;</i>
+  </div>
+  <div class="search-button-div">
+    <button class="search-button">Search</button>
+    <button class="reset-button">Reset</button>
+  </div>
+  <div class="search-container-forms">
+    <form action="">
+      <label for="countries" class="block-label">Country</label>
+      <select id="countries" name="cars">
+        <option *ngFor = "let a of getAllCountryName()">{{a.name["3"]}}</option>
+      </select>
+      <label for="keyword" class="block-label">Keyword</label>
+      <input type="text" id="keyword" name="keyword" class="block-input">
+      <input type="checkbox" id="code" name="code" value="Bike">
+      <label for="code">Code of the intervention</label><br>
+      <input type="checkbox" id="title" name="title" value="Car">
+      <label for="title">Title of the intervention</label><br>
+      <input type="checkbox" id="short-name" name="short-name" value="Boat">
+      <label for="short-name">Intervention Short Name</label><br>
+      <input type="checkbox" id="description" name="short-name" value="Boat">
+      <label for="description">Intervention Description</label><br><br>
+      <h3>Actual Start Date</h3>
+      <label for="from" class="block-label">From</label>
+      <input type="date" id="from" name="start" class="block-input">
+      <label for="to" class="block-label">To</label>
+      <input type="date" id="to" name="start" class="block-input">
+    </form>
+  </div>
+</div>

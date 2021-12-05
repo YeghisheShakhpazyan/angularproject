@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="container-header">
+    <div class="select-div">
+      <label for="status">Country</label>
+      <select id="status" name="status">
+        <option *ngFor = "let a of getAllStatusesName()">{{a.name["3"]}}</option>
+      </select>
+    </div>
+    <div class="button-div">
+      <button>create new intervention</button>
+    </div>
+  </div >
+  <table>
+    <thead id="thead">
+    <tr>
+      <th>Code of the Intervention <i class="fas fa-sort"></i></th>
+      <th>Short Name <i class="fas fa-sort"></i></th>
+      <th>Title <i class="fas fa-sort"></i></th>
+      <th>Countr <i class="fas fa-sort"></i></th>
+      <th>Status <i class="fas fa-sort"></i></th>
+      <th>Last Update By <i class="fas fa-sort"></i></th>
+      <th>Last Update On <i class="fas fa-sort"></i></th>
+    </tr>
+    </thead>
+    <tbody id="tbody" *ngFor = "let project of getAllProjects()" >
+      <th>{{project.InterventionCode}}</th>
+      <th>{{project.ShortName}}</th>
+      <th>{{project.Title}}</th>
+      <th>countryID</th>
+      <th>ststusId</th>
+      <th>{{project.UpdatedUserID | user }}</th>
+      <th>{{project.DateUpdated | date : "d/M/yy"}}</th>
+    </tbody>
+  </table>
+</div>

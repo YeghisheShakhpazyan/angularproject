@@ -7,6 +7,8 @@ import {FormsModule} from "@angular/forms";
 import { ContentComponent } from './content/content.component';
 
 import { UserPipe } from './pipes/user.pipe';
+import { CountryPipe } from './pipes/country.pipe';
+import { StatusPipe } from './pipes/status.pipe';
 
 
 @NgModule({
@@ -14,7 +16,9 @@ import { UserPipe } from './pipes/user.pipe';
     AppComponent,
     SearchComponent,
     ContentComponent,
-    UserPipe
+    UserPipe,
+    CountryPipe,
+    StatusPipe
   ],
   imports: [
     BrowserModule,

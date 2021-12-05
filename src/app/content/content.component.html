@@ -1,9 +1,10 @@
 <div class="container">
   <div class="container-header">
     <div class="select-div">
-      <label for="status">Country</label>
-      <select id="status" name="status">
-        <option *ngFor = "let a of getAllStatusesName()">{{a.name["3"]}}</option>
+      <label for="status">Status</label>
+      <select  id="status" name="status" [(ngModel)]="selectedValue" (click)="selectStatus()">
+        <option value="0">All statuses</option>
+        <option *ngFor = "let status of getAllStatuses()"  [value]="status.WFSTATEID">{{status.name["3"]}}</option>
       </select>
     </div>
     <div class="button-div">
@@ -26,8 +27,8 @@
       <th>{{project.InterventionCode}}</th>
       <th>{{project.ShortName}}</th>
       <th>{{project.Title}}</th>
-      <th>countryID</th>
-      <th>ststusId</th>
+      <th>{{project.InterventionCountryID | country}}</th>
+      <th>{{project.workflowStateId | status}}</th>
       <th>{{project.UpdatedUserID | user }}</th>
       <th>{{project.DateUpdated | date : "d/M/yy"}}</th>
     </tbody>

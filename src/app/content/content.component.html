@@ -2,35 +2,39 @@
   <div class="container-header">
     <div class="select-div">
       <label for="status">Status</label>
-      <select  id="status" name="status" [(ngModel)]="selectedValue" (click)="selectStatus()">
+      <!--      TODO: use ngModelChange-->
+      <select id="status" name="status" [(ngModel)]="selectedValue" (click)="selectStatus()">
         <option value="0">All statuses</option>
-        <option *ngFor = "let status of getAllStatuses()"  [value]="status.WFSTATEID">{{status.name["3"]}}</option>
+        <option *ngFor="let status of getAllStatuses()" [value]="status.WFSTATEID">{{status.name["3"]}}</option>
       </select>
     </div>
     <div class="button-div">
       <button>create new intervention</button>
     </div>
-  </div >
+  </div>
   <table>
     <thead id="thead">
     <tr>
-      <th>Code of the Intervention <i class="fas fa-sort"></i></th>
-      <th>Short Name <i class="fas fa-sort"></i></th>
-      <th>Title <i class="fas fa-sort"></i></th>
-      <th>Countr <i class="fas fa-sort"></i></th>
-      <th>Status <i class="fas fa-sort"></i></th>
-      <th>Last Update By <i class="fas fa-sort"></i></th>
-      <th>Last Update On <i class="fas fa-sort"></i></th>
+      <th>Code of the Intervention <i class="fas fa-sort" (click)="sortData($event,'InterventionCode')"></i></th>
+      <th>Short Name <i class="fas fa-sort" (click)="sortData($event,'ShortName')"></i></th>
+      <th>Title <i class="fas fa-sort" (click)="sortData($event,'Title')"></i></th>
+      <th>Country <i class="fas fa-sort" (click)="sortData($event,'InterventionCountryID')"></i></th>
+      <th>Status <i class="fas fa-sort" (click)="sortData($event,'workflowStateId')"></i></th>
+      <th>Last Update By <i class="fas fa-sort" (click)="sortData($event,'UpdatedUserID')"></i></th>
+      <th>Last Update On <i class="fas fa-sort" (click)="sortData($event,'DateUpdated')"></i></th>
     </tr>
     </thead>
-    <tbody id="tbody" *ngFor = "let project of getAllProjects()" >
-      <th>{{project.InterventionCode}}</th>
-      <th>{{project.ShortName}}</th>
-      <th>{{project.Title}}</th>
-      <th>{{project.InterventionCountryID | country}}</th>
-      <th>{{project.workflowStateId | status}}</th>
-      <th>{{project.UpdatedUserID | user }}</th>
-      <th>{{project.DateUpdated | date : "d/M/yy"}}</th>
+    <tbody id="tbody">
+    <tr  *ngFor="let project of projectData" appRowHover>
+      <td appRowHover>{{project.InterventionCode}}</td>
+      <td>{{project.ShortName}}</td>
+      <td>{{project.Title}}</td>
+      <td>{{project.InterventionCountryID | country}}</td>
+      <td>{{project.workflowStateId | status}}</td>
+      <td>{{project.UpdatedUserID | user }}</td>
+      <td>{{project.DateUpdated | date : "d/M/yy"}}</td>
+    </tr>
     </tbody>
   </table>
+  <app-pagination></app-pagination>
 </div>

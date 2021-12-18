@@ -1,21 +1,24 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {User} from "../model/User";
-import * as users from "../assets/users.json";
+import * as users from "../../assets/users.json";
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor() { }
+  constructor() {
+  }
 
   private getUsers() {
     return users;
   }
 
-  getUsersData() : Array<User>{
+  getUsersData(): Array<User> {
     return <Array<User>>this.getUsers().data;
   }
-  getUserByID(userId : number) : User {
+
+  getUserByID(userId: number): User {
     return <User>this.getUsersData().find(value => value.UserID == userId)
   }
 }

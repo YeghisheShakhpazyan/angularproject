@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import * as statuses from "../assets/status.json";
+import * as statuses from "../../assets/status.json";
 import {Status} from "../model/Status";
 
 @Injectable({
@@ -18,7 +18,7 @@ export class StatusService {
     return <Array<Status>>this.getStatuses().data;
   }
 
-  getStatusByID(id:number) : Status | undefined{
-    return this.getStatusesData().find(value => value.WFSTATEID == id);
+  getStatusByID(id:number) : Status{
+    return <Status>this.getStatusesData().find(value => value.WFSTATEID == id);
   }
 }

@@ -6,4 +6,5 @@ export interface Project {
   workflowStateId : number
   UpdatedUserID : number
   DateUpdated : number
+  ActualStartDate : string
 }

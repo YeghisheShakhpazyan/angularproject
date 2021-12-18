@@ -3,12 +3,15 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import {SearchComponent} from "./search/search.component";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { ContentComponent } from './content/content.component';
 
 import { UserPipe } from './pipes/user.pipe';
 import { CountryPipe } from './pipes/country.pipe';
 import { StatusPipe } from './pipes/status.pipe';
+import { PaginationComponent } from './pagination/pagination.component';
+import { RowHoverDirective } from './directives/row-hover.directive';
+import {ProjectService} from "./service/project.service";
 
 
 @NgModule({
@@ -18,13 +21,16 @@ import { StatusPipe } from './pipes/status.pipe';
     ContentComponent,
     UserPipe,
     CountryPipe,
-    StatusPipe
+    StatusPipe,
+    PaginationComponent,
+    RowHoverDirective
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [{provide:ProjectService,useClass:ProjectService}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,9 +1,9 @@
 <div class="container">
   <div class="searchCont1">
-    <app-search></app-search>
+    <app-search (search)="onSearch($event)"></app-search>
   </div>
   <div class="searchCont2">
-    <app-content></app-content>
+    <app-content [searchFilterData]="filterData"></app-content>
   </div>
 </div>
 

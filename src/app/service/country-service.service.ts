@@ -1,24 +1,27 @@
 import {Injectable} from '@angular/core';
-import * as countries from "../../assets/country.json";
+
 import {Country} from "../model/Country";
+import {Observable} from "rxjs";
+import {HttpClient} from "@angular/common/http";
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CountryService {
 
-  constructor() {
+
+  constructor(private http : HttpClient) {
   }
 
-  private getCountries() {
-    return countries;
+
+
+
+  getCountriesObservable() : Observable<Country[]>{
+    return this.http.get<Country[]>("../../assets/country.json").pipe(map(countries => countries["data"]));
   }
 
-  getCountriesData(): Array<Country> {
-    return <Array<Country>>this.getCountries().data;
-  }
-
-  getCountryByID(id: number): Country {
-    return <Country>this.getCountriesData().find(value => value.CountryId == id);
+  getCountryByID(id: number): Observable<Country> {
+    return this.getCountriesObservable().pipe(map(countries => <Country>countries.find(country => country.CountryId == id)));
   }
 }

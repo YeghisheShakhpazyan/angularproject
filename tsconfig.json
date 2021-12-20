@@ -4,6 +4,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
+    "noImplicitAny": false,
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,

@@ -12,6 +12,7 @@ import { StatusPipe } from './pipes/status.pipe';
 import { PaginationComponent } from './pagination/pagination.component';
 import { RowHoverDirective } from './directives/row-hover.directive';
 import {ProjectService} from "./service/project.service";
+import {HttpClientModule} from "@angular/common/http";
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import {ProjectService} from "./service/project.service";
   imports: [
     BrowserModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [{provide:ProjectService,useClass:ProjectService}],
   bootstrap: [AppComponent]

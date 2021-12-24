@@ -3,6 +3,7 @@ import {CountryService} from "../service/country-service.service";
 import {Country} from "../model/Country";
 import {FormControl, FormGroup} from "@angular/forms";
 import {FilterProject} from "../model/filterProject";
+import {map} from "rxjs/operators";
 
 
 @Component({
@@ -14,16 +15,18 @@ export class SearchComponent implements OnInit {
   @Output() search = new EventEmitter<FilterProject>();
   filterProject!: FilterProject
   filterForm!: FormGroup
+  countries! : Array<Country>
 
   constructor(private countryService: CountryService) {
   }
 
   ngOnInit(): void {
     this.createForm()
+    this.getCountries();
   }
 
-  getAllCountryName(): Array<Country> {
-    return this.countryService.getCountriesData();
+  getCountries(): void {
+     this.countryService.getCountriesObservable().subscribe(countries => this.countries = countries);
   }
 
   createForm(): void {

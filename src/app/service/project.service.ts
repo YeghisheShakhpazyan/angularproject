@@ -1,51 +1,63 @@
 import {Injectable} from '@angular/core';
-import * as projects from "../../assets/response.json";
+
 import {Project} from "../model/Project";
 import {FilterProject} from "../model/filterProject";
+import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {map} from "rxjs/operators";
+
 
 @Injectable(/*{
   providedIn: 'root'
 }*/)
 export class ProjectService {
 
-  constructor() {
+  projects! : Array<Project>
+
+  constructor(private http : HttpClient) {
   }
 
-  private getProjects() {
-    return projects;
+
+  getProjectsObservable() : Observable<Project[]>{
+    return this.http.get<Project[]>("assets/response.json").pipe(map(projects => projects["data"]));
   }
 
-  getProjectData(searchFilter: FilterProject, statusID: number) {
-    let projects = <Array<Project>>this.getProjects().data;
+  getProjectData(searchFilter: FilterProject, statusID: number) : Observable<Project[]>{
+    return this.getProjectsObservable().pipe(map(projects => {
+      return this.filterData(projects,searchFilter,statusID);
+    }));
+  }
+
+  filterData(projects : Array<Project>,searchFilter:FilterProject,statusID : number) : Array<Project>{
+    let p = projects;
     if (statusID) {
-      projects = this.getProjectsByStatus(statusID);
+      p = this.getProjectsByStatus(p,statusID);
     }
     if (searchFilter) {
-      projects = this.filterByCountryId(projects, searchFilter.countryId);
+      p = this.filterByCountryId(p, searchFilter.countryId);
 
       if (searchFilter?.keyword) {
-        projects = this.keywordFilter(projects, searchFilter);
+        p = this.keywordFilter(p, searchFilter);
       }
       if (searchFilter?.startDate || searchFilter?.endDate) {
-        projects = this.filterByDate(projects, searchFilter);
+        p = this.filterByDate(p, searchFilter);
       }
     }
-    return projects;
+    return p;
   }
 
-  getProjectsByStatus(statusID?: number): Array<Project> {
+  getProjectsByStatus(projects : Array<Project>,statusID?: number): Array<Project> {
     if (statusID) {
-      return <Array<Project>>this.getProjects().data.filter((value => value.workflowStateId == statusID))
+      return <Array<Project>>projects.filter((value => value.workflowStateId == statusID))
     }
 
-    return <Array<Project>>this.getProjects().data;
+    return projects;
   }
 
   filterByCountryId(projects: Array<Project>, countryId: number): Array<Project> {
     if (!countryId) {
       return projects;
     }
-
     return projects.filter(project => project.InterventionCountryID == countryId);
   }
 
@@ -89,5 +101,9 @@ export class ProjectService {
 
   filterByDate(projects: Array<Project>, searchFilter: FilterProject): Array<Project> {
     return projects.filter(project => this.dateFilter(project, searchFilter));
+  }
+
+  getProject(interventionID : number) : Observable<Project>{
+    return this.getProjectsObservable().pipe(map(projects => <Project>projects.find(project => project.InterventionID==interventionID)))
   }
 }

@@ -13,7 +13,7 @@
       <label for="countries" class="block-label">Country</label>
       <select id="countries" name="cars" formControlName="countryId">
         <option value="0">--Select One--</option>
-        <option *ngFor="let country of getAllCountryName()" [value]="country.CountryId">{{country.name["3"]}}</option>
+        <option *ngFor="let country of countries" [value]="country.CountryId">{{country.name["3"]}}</option>
       </select>
       <label for="keyword" class="block-label">Keyword</label>
       <input type="text" id="keyword" name="keyword" class="block-input" formControlName="keyword">

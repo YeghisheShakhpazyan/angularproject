@@ -4,6 +4,12 @@ import {SortModel} from "../model/SortModel";
 import {CountryService} from "./country-service.service";
 import {StatusService} from "./status.service";
 import {UserService} from "./user.service";
+import {Observable, zip} from "rxjs";
+import {Country} from "../model/Country";
+import {Status} from "../model/Status";
+import {User} from "../model/User";
+import {map} from "rxjs/operators";
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +21,18 @@ export class TableSortService {
               private userService: UserService) {
   }
 
-  sortTable(projects: Array<Project>, sortModel: SortModel): Array<Project> {
+  getSortTable(projects: Array<Project>, sortModel: SortModel): Observable<Project[]> {
+    let countries$ = this.countryService.getCountriesObservable();
+    let statuses$ = this.statusService.getStatusesObservable();
+    let users$ = this.userService.getUsersObservable();
+    return  zip(countries$, statuses$, users$).pipe(
+       map(([countries, statuses, users]) => {
+      this.sortTable(projects, sortModel, countries, statuses, users);
+      return projects;
+    }));
+  }
+
+  sortTable(projects : Project[],sortModel : SortModel,countries : Country[],statuses : Status[], users : User[]) : void{
     switch (sortModel.sortBy) {
       case "InterventionCode":
         projects.sort(((a, b) => sortModel.isDesk * (a.InterventionCode.localeCompare(b.InterventionCode))));
@@ -27,33 +44,38 @@ export class TableSortService {
         projects.sort(((a, b) => sortModel.isDesk * (a.Title.localeCompare(b.Title))));
         break;
       case "InterventionCountryID":
-        this.sortByCountry(projects, sortModel.isDesk);
+        projects.sort((a, b) => sortModel.isDesk*(this.getCountryName(countries,a.InterventionCountryID)
+          ?.localeCompare(this.getCountryName(countries,b.InterventionCountryID))));
         break;
       case "workflowStateId":
-        this.sortByStatus(projects, sortModel.isDesk);
+        projects.sort(((a, b) => sortModel.isDesk*(this.getStatusName(statuses,a.workflowStateId)
+          ?.localeCompare(this.getStatusName(statuses,b.workflowStateId)))));
         break;
       case "UpdatedUserID":
-        this.sortByUser(projects, sortModel.isDesk);
+        projects.sort(((a, b) => sortModel.isDesk*(this.getUserName(users,a.UpdatedUserID)
+          ?.localeCompare(this.getUserName(users,b.UpdatedUserID)))));
         break;
       case "DateUpdated":
         projects.sort(((a, b) => sortModel.isDesk * (a.DateUpdated - b.DateUpdated)));
         break;
     }
-    return projects;
+
   }
 
-  private sortByCountry(projects: Array<Project>, isDesk: number): void {
-    projects.sort(((a, b) => isDesk * (this.countryService.getCountryByID(a.InterventionCountryID).name["3"]
-      .localeCompare(this.countryService.getCountryByID(b.InterventionCountryID).name["3"]))));
+
+
+  private getCountryName(countries : Country[],InterventionCountryID : number) : string{
+    return <string>countries.find(country => country.CountryId == InterventionCountryID)?.name["3"];
   }
 
-  private sortByStatus(projects: Array<Project>, isDesk: number): void {
-    projects.sort(((a, b) => isDesk * (this.statusService.getStatusByID(a.workflowStateId)?.name["3"]
-      .localeCompare(this.statusService.getStatusByID(b.workflowStateId)?.name["3"]))));
+  private getStatusName(statuses : Status[],workflowStateId : number){
+    return <string>statuses.find(status => status.WFSTATEID == workflowStateId)?.name["3"];
   }
 
-  private sortByUser(projects: Array<Project>, isDesk: number): void {
-    projects.sort(((a, b) => isDesk * (this.userService.getUserByID(a.UpdatedUserID)?.name["3"]
-      .localeCompare(this.userService.getUserByID(b.UpdatedUserID)?.name["3"]))));
+  private getUserName(users : User[],UpdatedUserID : number) : string{
+    let h = <string>users.find(user => user.UserID == UpdatedUserID)?.name["3"];
+    console.log(h)
+    return h;
   }
+
 }

@@ -13,6 +13,11 @@ import { PaginationComponent } from './pagination/pagination.component';
 import { RowHoverDirective } from './directives/row-hover.directive';
 import {ProjectService} from "./service/project.service";
 import {HttpClientModule} from "@angular/common/http";
+import { InterventionComponent } from './intervention/intervention.component';
+import {AppRoutingModule} from "./app-routing.module";
+import { HomeComponent } from './home/home.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
+import {NgxPaginationModule} from "ngx-pagination";
 
 
 @NgModule({
@@ -24,13 +29,18 @@ import {HttpClientModule} from "@angular/common/http";
     CountryPipe,
     StatusPipe,
     PaginationComponent,
-    RowHoverDirective
+    RowHoverDirective,
+    InterventionComponent,
+    HomeComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    AppRoutingModule,
+    NgxPaginationModule
   ],
   providers: [{provide:ProjectService,useClass:ProjectService}],
   bootstrap: [AppComponent]

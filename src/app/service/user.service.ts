@@ -1,24 +1,36 @@
 import {Injectable} from '@angular/core';
 import {User} from "../model/User";
-import * as users from "../../assets/users.json";
+import {Observable} from "rxjs";
+import {HttpClient} from "@angular/common/http";
+import {map} from "rxjs/operators";
+import {of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor() {
+  private users!: Array<User>
+
+  constructor(private http : HttpClient) {
+
   }
 
-  private getUsers() {
-    return users;
-  }
 
-  getUsersData(): Array<User> {
-    return <Array<User>>this.getUsers().data;
-  }
 
-  getUserByID(userId: number): User {
-    return <User>this.getUsersData().find(value => value.UserID == userId)
+
+  getUsersObservable() : Observable<User[]>{
+    if(this.users){
+      return of(this.users);
+    }else {
+      return this.http.get<User[]>("../../assets/users.json").pipe(map(users => {
+        this.users = users["data"];
+        return this.users
+      }));
+    }
+   }
+
+  getUserObservable(id : number) : Observable<User>{
+    return this.getUsersObservable().pipe(map(users => <User>users.find(user => user.UserID == id)));
   }
 }

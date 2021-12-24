@@ -5,7 +5,7 @@
       <!--      TODO: use ngModelChange-->
       <select id="status" name="status" [(ngModel)]="selectedValue" (click)="selectStatus()">
         <option value="0">All statuses</option>
-        <option *ngFor="let status of getAllStatuses()" [value]="status.WFSTATEID">{{status.name["3"]}}</option>
+        <option *ngFor="let status of statuses" [value]="status.WFSTATEID">{{status.name["3"]}}</option>
       </select>
     </div>
     <div class="button-div">
@@ -25,13 +25,13 @@
     </tr>
     </thead>
     <tbody id="tbody">
-    <tr  *ngFor="let project of projectData" appRowHover>
-      <td appRowHover>{{project.InterventionCode}}</td>
+    <tr  *ngFor="let project of projectData" appRowHover >
+      <td appRowHover><a [routerLink]="['/intervention',project.InterventionID]">{{project.InterventionCode}}</a></td>
       <td>{{project.ShortName}}</td>
       <td>{{project.Title}}</td>
-      <td>{{project.InterventionCountryID | country}}</td>
-      <td>{{project.workflowStateId | status}}</td>
-      <td>{{project.UpdatedUserID | user }}</td>
+      <td>{{project.InterventionCountryID | country | async}}</td>
+      <td>{{project.workflowStateId | status | async }}</td>
+      <td>{{project.UpdatedUserID | user | async}}</td>
       <td>{{project.DateUpdated | date : "d/M/yy"}}</td>
     </tr>
     </tbody>

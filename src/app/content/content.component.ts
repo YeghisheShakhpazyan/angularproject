@@ -7,6 +7,8 @@ import {Project} from "../model/Project";
 import {FilterProject} from "../model/filterProject";
 import {TableSortService} from "../service/table-sort.service";
 
+
+
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
@@ -17,31 +19,42 @@ export class ContentComponent implements OnInit, OnChanges {
   @Input() searchFilterData!: FilterProject;
   // TODO:rename
   selectedValue: string = "0";
-  projectData: Array<Project>;
+  projectData!: Array<Project>;
   sortModel: SortModel;
+  statuses! : Array<Status>
 
   constructor(private statusService: StatusService,
               private projectService: ProjectService,
-              private tableSortService: TableSortService) {
-    this.projectData = this.projectService.getProjectData(this.searchFilterData, +this.selectedValue);
+              private tableSortService: TableSortService,
+              ) {
+
     this.sortModel = {isDesk: 1, sortBy: ""};
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.searchFilterData) {
-      this.projectData = this.projectService.getProjectData(this.searchFilterData, +this.selectedValue);
+      this.findProjects()
     }
+
+  }
+
+  findProjects() : void {
+    this.projectService.getProjectData(this.searchFilterData, +this.selectedValue).subscribe(projects => this.projectData = projects);
   }
 
   ngOnInit(): void {
+    this.findProjects();
+    this.findStatuses();
+
   }
 
-  getAllStatuses(): Array<Status> {
-    return this.statusService.getStatusesData();
+  findStatuses(): void {
+    this.statusService.getStatusesObservable().subscribe(statuses => this.statuses = statuses);
   }
 
   getAllProjects(): void {
-    this.projectData = this.projectService.getProjectData(this.searchFilterData, Number(this.selectedValue));
+    this.projectService.getProjectData(this.searchFilterData, +this.selectedValue).subscribe(projects => this.projectData = projects);
+
   }
 
   selectStatus() {
@@ -55,6 +68,6 @@ export class ContentComponent implements OnInit, OnChanges {
       this.sortModel.isDesk = 1;
       this.sortModel.sortBy = sortBy;
     }
-    this.tableSortService.sortTable(this.projectData, this.sortModel);
+    this.tableSortService.getSortTable(this.projectData, this.sortModel).subscribe();
   }
 }

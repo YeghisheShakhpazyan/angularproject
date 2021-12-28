@@ -2,8 +2,8 @@
   <div class="container-header">
     <div class="select-div">
       <label for="status">Status</label>
-      <!--      TODO: use ngModelChange-->
-      <select id="status" name="status" [(ngModel)]="selectedValue" (click)="selectStatus()">
+
+      <select id="status" name="status" [(ngModel)]="selectedStatus" (click)="selectStatus()">
         <option value="0">All statuses</option>
         <option *ngFor="let status of statuses" [value]="status.WFSTATEID">{{status.name["3"]}}</option>
       </select>
@@ -15,17 +15,17 @@
   <table>
     <thead id="thead">
     <tr>
-      <th>Code of the Intervention <i class="fas fa-sort" (click)="sortData($event,'InterventionCode')"></i></th>
-      <th>Short Name <i class="fas fa-sort" (click)="sortData($event,'ShortName')"></i></th>
-      <th>Title <i class="fas fa-sort" (click)="sortData($event,'Title')"></i></th>
-      <th>Country <i class="fas fa-sort" (click)="sortData($event,'InterventionCountryID')"></i></th>
-      <th>Status <i class="fas fa-sort" (click)="sortData($event,'workflowStateId')"></i></th>
-      <th>Last Update By <i class="fas fa-sort" (click)="sortData($event,'UpdatedUserID')"></i></th>
-      <th>Last Update On <i class="fas fa-sort" (click)="sortData($event,'DateUpdated')"></i></th>
+      <th>Code of the Intervention <i class="fas fa-sort" (click)="sortProjects('InterventionCode')"></i></th>
+      <th>Short Name <i class="fas fa-sort" (click)="sortProjects('ShortName')"></i></th>
+      <th>Title <i class="fas fa-sort" (click)="sortProjects('Title')"></i></th>
+      <th>Country <i class="fas fa-sort" (click)="sortProjects('InterventionCountryID')"></i></th>
+      <th>Status <i class="fas fa-sort" (click)="sortProjects('workflowStateId')"></i></th>
+      <th>Last Update By <i class="fas fa-sort" (click)="sortProjects('UpdatedUserID')"></i></th>
+      <th>Last Update On <i class="fas fa-sort" (click)="sortProjects('DateUpdated')"></i></th>
     </tr>
     </thead>
     <tbody id="tbody">
-    <tr  *ngFor="let project of projectData" appRowHover >
+    <tr *ngFor="let project of projectData | paginate : {itemsPerPage : 3,currentPage : page}" appRowHover>
       <td appRowHover><a [routerLink]="['/intervention',project.InterventionID]">{{project.InterventionCode}}</a></td>
       <td>{{project.ShortName}}</td>
       <td>{{project.Title}}</td>
@@ -36,5 +36,5 @@
     </tr>
     </tbody>
   </table>
-  <app-pagination></app-pagination>
+  <pagination-controls (pageChange)="page = $event"></pagination-controls>
 </div>

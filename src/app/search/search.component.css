@@ -1,64 +1,77 @@
 
-.search-container{
+.search-container {
   border: .5px solid black;
 }
-.search-container-header{
+
+.search-container-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #353940;
 
 }
-.search-container-header h3{
+
+.search-container-header h3 {
   color: white;
   margin-left: 10px;
 }
-form{
+
+form {
   margin-bottom: 10px;
 }
-i{
+
+i {
   color: white;
   margin-right: 10px;
 }
-select{
+
+select {
   width: 100%;
   height: 25px;
 }
-input{}
-.search-button-div{
+
+input {
+}
+
+.search-button-div {
   margin-top: 20px;
   display: flex;
   justify-content: space-around;
 }
-.search-button{
+
+.search-button {
   width: 80px;
   height: 30px;
   background-color: forestgreen;
   color: snow;
   border-radius: 5px;
 }
-.reset-button{
+
+.reset-button {
   width: 80px;
   height: 30px;
   background-color: aliceblue;
   border-radius: 5px;
 }
 
-label{
+label {
   margin-bottom: 5px;
   margin-top: 5px;
 }
-.block-label{
-  display: block;
-}
-#keyword{
+
+.block-label {
   display: block;
 }
 
-.search-container-forms{
+#keyword {
+  display: block;
+}
+
+.search-container-forms {
   width: 90%;
   margin: auto;
 }
-.block-input{
+
+.block-input {
   width: 100%;
 }

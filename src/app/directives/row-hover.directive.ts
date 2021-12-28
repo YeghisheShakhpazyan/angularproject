@@ -5,20 +5,21 @@ import {Directive, ElementRef, HostListener, Renderer2} from '@angular/core';
 })
 export class RowHoverDirective {
 
-  constructor(private elementRef : ElementRef,private  renderer : Renderer2) { }
+  constructor(private elementRef: ElementRef, private  renderer: Renderer2) {
+  }
 
   @HostListener("mouseenter")
-  onMouseEnter(){
+  onMouseEnter() {
     this.changeColor("gold");
   }
 
   @HostListener("mouseleave")
-  onMouseLeave(){
+  onMouseLeave() {
     this.changeColor("");
   }
 
-  private changeColor(color : string){
-    this.renderer.setStyle(this.elementRef.nativeElement,"backgroundColor",color);
+  private changeColor(color: string) {
+    this.renderer.setStyle(this.elementRef.nativeElement, "backgroundColor", color);
   }
 
 }

@@ -8,7 +8,6 @@ import {FilterProject} from "../model/filterProject";
 import {TableSortService} from "../service/table-sort.service";
 
 
-
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
@@ -17,51 +16,39 @@ import {TableSortService} from "../service/table-sort.service";
 export class ContentComponent implements OnInit, OnChanges {
 
   @Input() searchFilterData!: FilterProject;
-  // TODO:rename
-  selectedValue: string = "0";
+  selectedStatus: string = "0";
   projectData!: Array<Project>;
-  sortModel: SortModel;
-  statuses! : Array<Status>
+  sortModel: SortModel = {isDesk: 1, sortBy: ""};
+  statuses!: Array<Status>
+  page: number = 1
 
   constructor(private statusService: StatusService,
               private projectService: ProjectService,
-              private tableSortService: TableSortService,
-              ) {
-
-    this.sortModel = {isDesk: 1, sortBy: ""};
+              private tableSortService: TableSortService) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.searchFilterData) {
-      this.findProjects()
-    }
-
-  }
-
-  findProjects() : void {
-    this.projectService.getProjectData(this.searchFilterData, +this.selectedValue).subscribe(projects => this.projectData = projects);
+    this.initProjects()
   }
 
   ngOnInit(): void {
-    this.findProjects();
-    this.findStatuses();
-
+    this.initProjects();
+    this.initStatuses();
   }
 
-  findStatuses(): void {
-    this.statusService.getStatusesObservable().subscribe(statuses => this.statuses = statuses);
+  initStatuses(): void {
+    this.statusService.getStatuses().subscribe(statuses => this.statuses = statuses);
   }
 
-  getAllProjects(): void {
-    this.projectService.getProjectData(this.searchFilterData, +this.selectedValue).subscribe(projects => this.projectData = projects);
-
+  initProjects(): void {
+    this.projectService.getProjectsByFilter(this.searchFilterData, +this.selectedStatus).subscribe(projects => this.projectData = projects);
   }
 
   selectStatus() {
-    this.getAllProjects();
+    this.projectService.getProjectsByFilter(this.searchFilterData, +this.selectedStatus).subscribe(projects => this.projectData = projects);
   }
 
-  sortData($event: MouseEvent, sortBy: string) {
+  sortProjects(sortBy: string) {
     if (sortBy == this.sortModel.sortBy) {
       this.sortModel.isDesk *= -1;
     } else {

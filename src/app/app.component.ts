@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {FilterProject} from "./model/filterProject";
 
 @Component({
   selector: 'app-root',
@@ -7,11 +6,4 @@ import {FilterProject} from "./model/filterProject";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  filterData!: FilterProject;
-
-  onSearch(data: FilterProject) {
-    this.filterData = data
-  }
-
-
 }

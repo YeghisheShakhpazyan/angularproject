@@ -1,4 +1,4 @@
 export interface SortModel {
-  isDesk : number
-  sortBy : string
+  isDesk: number
+  sortBy: string
 }

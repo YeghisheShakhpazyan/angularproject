@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Project} from "../model/Project";
 import {SortModel} from "../model/SortModel";
-import {CountryService} from "./country-service.service";
+import {CountryService} from "./country.service";
 import {StatusService} from "./status.service";
 import {UserService} from "./user.service";
 import {Observable, zip} from "rxjs";
@@ -22,17 +22,17 @@ export class TableSortService {
   }
 
   getSortTable(projects: Array<Project>, sortModel: SortModel): Observable<Project[]> {
-    let countries$ = this.countryService.getCountriesObservable();
-    let statuses$ = this.statusService.getStatusesObservable();
-    let users$ = this.userService.getUsersObservable();
-    return  zip(countries$, statuses$, users$).pipe(
-       map(([countries, statuses, users]) => {
-      this.sortTable(projects, sortModel, countries, statuses, users);
-      return projects;
-    }));
+    let countries$ = this.countryService.getCountries();
+    let statuses$ = this.statusService.getStatuses();
+    let users$ = this.userService.getUsers();
+    return zip(countries$, statuses$, users$).pipe(
+      map(([countries, statuses, users]) => {
+        this.sortTable(projects, sortModel, countries, statuses, users);
+        return projects;
+      }));
   }
 
-  sortTable(projects : Project[],sortModel : SortModel,countries : Country[],statuses : Status[], users : User[]) : void{
+  private sortTable(projects: Project[], sortModel: SortModel, countries: Country[], statuses: Status[], users: User[]): void {
     switch (sortModel.sortBy) {
       case "InterventionCode":
         projects.sort(((a, b) => sortModel.isDesk * (a.InterventionCode.localeCompare(b.InterventionCode))));
@@ -44,16 +44,16 @@ export class TableSortService {
         projects.sort(((a, b) => sortModel.isDesk * (a.Title.localeCompare(b.Title))));
         break;
       case "InterventionCountryID":
-        projects.sort((a, b) => sortModel.isDesk*(this.getCountryName(countries,a.InterventionCountryID)
-          ?.localeCompare(this.getCountryName(countries,b.InterventionCountryID))));
+        projects.sort((a, b) => sortModel.isDesk * (this.getCountryName(countries, a.InterventionCountryID)
+          ?.localeCompare(this.getCountryName(countries, b.InterventionCountryID))));
         break;
       case "workflowStateId":
-        projects.sort(((a, b) => sortModel.isDesk*(this.getStatusName(statuses,a.workflowStateId)
-          ?.localeCompare(this.getStatusName(statuses,b.workflowStateId)))));
+        projects.sort(((a, b) => sortModel.isDesk * (this.getStatusName(statuses, a.workflowStateId)
+          ?.localeCompare(this.getStatusName(statuses, b.workflowStateId)))));
         break;
       case "UpdatedUserID":
-        projects.sort(((a, b) => sortModel.isDesk*(this.getUserName(users,a.UpdatedUserID)
-          ?.localeCompare(this.getUserName(users,b.UpdatedUserID)))));
+        projects.sort(((a, b) => sortModel.isDesk * (this.getUserName(users, a.UpdatedUserID)
+          ?.localeCompare(this.getUserName(users, b.UpdatedUserID)))));
         break;
       case "DateUpdated":
         projects.sort(((a, b) => sortModel.isDesk * (a.DateUpdated - b.DateUpdated)));
@@ -62,20 +62,15 @@ export class TableSortService {
 
   }
 
-
-
-  private getCountryName(countries : Country[],InterventionCountryID : number) : string{
+  private getCountryName(countries: Country[], InterventionCountryID: number): string {
     return <string>countries.find(country => country.CountryId == InterventionCountryID)?.name["3"];
   }
 
-  private getStatusName(statuses : Status[],workflowStateId : number){
+  private getStatusName(statuses: Status[], workflowStateId: number) {
     return <string>statuses.find(status => status.WFSTATEID == workflowStateId)?.name["3"];
   }
 
-  private getUserName(users : User[],UpdatedUserID : number) : string{
-    let h = <string>users.find(user => user.UserID == UpdatedUserID)?.name["3"];
-    console.log(h)
-    return h;
+  private getUserName(users: User[], UpdatedUserID: number): string {
+    return <string>users.find(user => user.UserID == UpdatedUserID)?.name["3"];
   }
-
 }

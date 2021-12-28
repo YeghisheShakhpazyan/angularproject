@@ -1,44 +1,32 @@
 import {Injectable} from '@angular/core';
-import * as statuses from "../../assets/status.json";
 import {Status} from "../model/Status";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import {map} from "rxjs/operators";
-import {of} from "rxjs";
+import {map, shareReplay} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatusService {
-  private statuses!: Status[]
+  private statuses$!: Observable<Status[]>
 
   constructor(private http: HttpClient) {
+    this.initStatuses();
   }
 
-  private getStatuses() {
-    return statuses;
+  private initStatuses(): void {
+    this.statuses$ = this.http.get<Status>("../../assets/status.json").pipe(map(statuses => {
+        return statuses["data"];
+      }),
+      shareReplay({bufferSize: 1, refCount: true})
+    );
   }
 
-  getStatusesData(): Array<Status> {
-    return <Array<Status>>this.getStatuses().data;
+  getStatuses(): Observable<Status[]> {
+    return this.statuses$;
   }
 
-  getStatusByID(id: number): Status {
-    return <Status>this.getStatusesData().find(value => value.WFSTATEID == id);
-  }
-
-  getStatusesObservable(): Observable<Status[]> {
-    if (this.statuses){
-      return of(this.statuses);
-    }
-    return this.http.get<Status>("../../assets/status.json").pipe(map(statuses => {
-      this.statuses=statuses["data"];
-      return this.statuses;
-    }
-   ));
-  }
-
-  getStatusObservable(id: number): Observable<Status> {
-    return this.getStatusesObservable().pipe(map(statuses => <Status>statuses.find(status => status.WFSTATEID == id)));
+  getStatus(id: number): Observable<Status> {
+    return this.getStatuses().pipe(map(statuses => <Status>statuses.find(status => status.WFSTATEID == id)));
   }
 }

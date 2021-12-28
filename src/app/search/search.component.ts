@@ -1,10 +1,8 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {CountryService} from "../service/country-service.service";
+import {CountryService} from "../service/country.service";
 import {Country} from "../model/Country";
 import {FormControl, FormGroup} from "@angular/forms";
 import {FilterProject} from "../model/filterProject";
-import {map} from "rxjs/operators";
-
 
 @Component({
   selector: 'app-search',
@@ -13,9 +11,10 @@ import {map} from "rxjs/operators";
 })
 export class SearchComponent implements OnInit {
   @Output() search = new EventEmitter<FilterProject>();
+
   filterProject!: FilterProject
   filterForm!: FormGroup
-  countries! : Array<Country>
+  countries!: Array<Country>
 
   constructor(private countryService: CountryService) {
   }
@@ -26,7 +25,7 @@ export class SearchComponent implements OnInit {
   }
 
   getCountries(): void {
-     this.countryService.getCountriesObservable().subscribe(countries => this.countries = countries);
+    this.countryService.getCountries().subscribe(countries => this.countries = countries);
   }
 
   createForm(): void {
@@ -48,19 +47,16 @@ export class SearchComponent implements OnInit {
   }
 
   createFilter(): void {
-    this.filterProject =
-      {
-        countryId: Number(this.filterForm.controls["countryId"].value),
-        keyword: this.filterForm.controls["keyword"].value,
-        code: this.filterForm.controls["codeCheckbox"].value,
-        shortName: this.filterForm.controls["shortName"].value,
-        title: this.filterForm.controls["titleCheckbox"].value,
-        description: this.filterForm.controls["description"].value,
-        startDate: this.filterForm.controls["startDate"].value,
-        endDate: this.filterForm.controls["endDate"].value,
-      }
-    console.log(this.filterProject.startDate);
-
+    this.filterProject = {
+      countryId: +this.filterForm.controls["countryId"].value,
+      keyword: this.filterForm.controls["keyword"].value,
+      code: this.filterForm.controls["codeCheckbox"].value,
+      shortName: this.filterForm.controls["shortName"].value,
+      title: this.filterForm.controls["titleCheckbox"].value,
+      description: this.filterForm.controls["description"].value,
+      startDate: this.filterForm.controls["startDate"].value,
+      endDate: this.filterForm.controls["endDate"].value,
+    }
   }
 
   reset() {
